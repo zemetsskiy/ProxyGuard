@@ -1,17 +1,28 @@
-{% extends 'base.html' %}
-
 {% block content %}
 
 <div style="text-align:center;">
-        <h1>Add Proxy</h1>
-        <form action="/add_proxy" method="post">
-            <input type="text" name="customer_name" placeholder="Customer Name" required><br>
-            <input type="date" name="purchase_date" required><br>
-            <input type="number" name="duration_months" placeholder="Duration (Months)" required><br>
-            <input type="number" name="price" placeholder="Price" step="0.01" required><br>
-            <input type="text" name="proxy_package" placeholder="Proxy Package" required><br>
-            <button type="submit">Add Proxy</button>
-        </form>
-    </div>
+    <h1>Add Proxy</h1>
+    <form action="/add_proxy" method="post">
+        <input type="text" name="customer_name" placeholder="Customer Name" required><br>
+        <input type="date" name="purchase_date" required><br>
+        <input type="number" name="duration_months" placeholder="Duration (Months)" required><br>
+        <input type="number" name="price" placeholder="Price" step="0.01" required><br>
+        <input type="text" name="proxy_package" placeholder="Proxy Package" required><br>
+        <textarea name="proxy_list" id="proxyList" placeholder="Enter proxies here..." oninput="updateProxyCount()"></textarea><br>
+        <span id="proxyCount">0</span> proxies added.<br>
+        <button type="submit">Add Proxy</button>
+    </form>
+</div>
+
+<script>
+    function updateProxyCount() {
+        var proxyList = document.getElementById('proxyList').value.split('\n');
+        var proxyCount = proxyList.length;
+        if (proxyList[proxyList.length - 1] === '') {
+            proxyCount -= 1;
+        }
+        document.getElementById('proxyCount').innerText = proxyCount;
+    }
+</script>
 
 {% endblock content %}

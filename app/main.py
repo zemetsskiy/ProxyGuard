@@ -1,7 +1,11 @@
+from typing import Optional
+
+from bson import json_util
 from database import db
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from datetime import datetime
 
 templates = Jinja2Templates(directory="templates")
@@ -42,3 +46,18 @@ async def add_proxy(request: Request,
 @app.get("/add_proxy")
 async def add_proxy(request: Request):
     return templates.TemplateResponse("addition.html", {"request": request})
+
+
+@app.get("/view_proxies")
+async def view_proxies(request: Request):
+    return templates.TemplateResponse("view_proxies.html", {"request": request})
+
+
+@app.get("/get_proxies")
+async def get_proxies(request: Request, filter: Optional[str] = None):
+    query = {}
+    if filter:
+        key, value = filter.split(':')
+        query[key] = value
+    proxies = list(db.proxies.find(query))
+    return JSONResponse(content=json_util.dumps(proxies))

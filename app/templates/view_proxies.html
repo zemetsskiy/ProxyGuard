@@ -1,0 +1,57 @@
+{% block content %}
+
+<div style="text-align:center;">
+    <h1>View Proxies</h1>
+    <input type="text" id="filter" placeholder="Enter filter (e.g., customer_name:Ivan)">
+    <button onclick="loadProxies()">Filter</button>
+    <div style="height: 500px; overflow: auto;">
+        <table id="proxiesTable">
+            <thead>
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Purchase Date</th>
+                    <th>Duration</th>
+                    <th>Price</th>
+                    <th>Proxy Package</th>
+                    <!-- Другие колонки -->
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Данные будут загружены здесь -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function formatDate(dateObject) {
+    if (dateObject && dateObject.$date) {
+        var date = new Date(dateObject.$date);
+        return date.toLocaleDateString("ru-RU");
+    }
+    return "Invalid Date";
+}
+
+function loadProxies() {
+    var filter = document.getElementById('filter').value;
+    fetch('/get_proxies?filter=' + filter)
+        .then(response => response.json())
+        .then(data => {
+            var proxies = JSON.parse(data);
+            var tableBody = document.getElementById('proxiesTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            proxies.forEach(proxy => {
+                var row = tableBody.insertRow();
+                row.insertCell(0).innerHTML = proxy.customer_name;
+                row.insertCell(1).innerHTML = formatDate(proxy.purchase_date);
+                row.insertCell(2).innerHTML = proxy.duration_months;
+                row.insertCell(3).innerHTML = proxy.price;
+                row.insertCell(4).innerHTML = proxy.proxy_package;
+            });
+        });
+}
+loadProxies()
+</script>
+
+{% endblock content %}

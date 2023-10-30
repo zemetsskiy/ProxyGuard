@@ -22,15 +22,18 @@ async def add_proxy(request: Request,
                     purchase_date: str = Form(...),
                     duration_months: int = Form(...),
                     price: float = Form(...),
-                    proxy_package: str = Form(...)):
+                    proxy_package: str = Form(...),
+                    proxy_list: str = Form(...)):
     purchase_date = datetime.strptime(purchase_date, '%Y-%m-%d')
+    proxy_array = proxy_list.split('\n')
 
     proxy_document = {
         "customer_name": customer_name,
         "purchase_date": purchase_date,
         "duration_months": duration_months,
         "price": price,
-        "proxy_package": proxy_package
+        "proxy_package": proxy_package,
+        "proxy_list": proxy_array
     }
     db.proxies.insert_one(proxy_document)
     return {"message": "Proxy added successfully"}

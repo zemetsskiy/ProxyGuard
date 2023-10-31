@@ -24,3 +24,34 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .expired {
     background-color: #ffcccc;
 }
+
+
+/* Profile */
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.proxy-list h2 {
+    margin-top: 20px;
+}
+
+.proxy-list ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.proxy-list li {
+    margin-bottom: 10px;
+    font-size: 1em;
+    position: relative;
+}

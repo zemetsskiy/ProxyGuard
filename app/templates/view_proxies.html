@@ -30,6 +30,15 @@
 </div>
 
 <script>
+
+function isExpired(expirationDateString) {
+    var today = new Date();
+    console.log(today)
+    var expirationDate = new Date(expirationDateString.$date);
+    console.log(expirationDate)
+    return expirationDate < today;
+}
+
 function formatDate(dateObject) {
     if (dateObject && dateObject.$date) {
         var date = new Date(dateObject.$date);
@@ -49,11 +58,20 @@ function loadProxies() {
 
             proxies.forEach(proxy => {
                 var row = tableBody.insertRow();
+
+
                 row.insertCell(0).innerHTML = proxy.customer_name;
                 row.insertCell(1).innerHTML = proxy.proxy_count;
                 row.insertCell(2).innerHTML = proxy.price;
                 row.insertCell(3).innerHTML = formatDate(proxy.purchase_date);
-                row.insertCell(4).innerHTML = formatDate(proxy.expiration_date);
+
+                var expirationCell = row.insertCell(4);
+                expirationCell.innerHTML = formatDate(proxy.expiration_date);
+                console.log(isExpired(proxy.expiration_date))
+                if (isExpired(proxy.expiration_date)) {
+                    expirationCell.classList.add("expired");
+                }
+
                 row.insertCell(5).innerHTML = proxy.proxy_package;
                 row.insertCell(6).innerHTML = proxy.total_price;
                 row.insertCell(7).innerHTML = proxy.margin;

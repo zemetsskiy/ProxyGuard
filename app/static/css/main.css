@@ -119,12 +119,12 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 .showMoreProxies i, .showLessProxies i {
-    color: #337ab7;
+    color: #70cc57;
     font-size: 1em;
 }
 
 .showMoreProxies:hover i, .showLessProxies:hover i {
-    color: #23527c;
+    color: #4aa553;
 }
 
 .delete-button {

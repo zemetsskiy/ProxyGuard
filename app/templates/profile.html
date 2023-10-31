@@ -4,27 +4,59 @@
 
 <div class="container">
         <header>
-            <h1>Profile Information</h1>
+            <h1>{{customer_name}}</h1>
         </header>
-        <section class="profile-info">
-            <div class="info">
-                <p><strong>Name:</strong> {{ profile.customer_name }}</p>
-                <p><strong>Purchase Date:</strong> {{ profile.purchase_date }}</p>
-                <p><strong>Expiration Date:</strong> {{ profile.expiration_date }}</p>
-                <p><strong>Total Price:</strong> {{ profile.total_price }}</p>
-                <!-- Другие детали -->
-            </div>
-        </section>
 
-        <section class="proxy-list">
-            <h2>Proxy List</h2>
-            <ul>
-                {% for proxy in profile.proxy_list %}
-                <li><i><strong>{{ loop.index }}.</strong></i> {{ proxy }}</li>
-                {% endfor %}
-            </ul>
+        <section class="orders">
+        {% for order in orders %}
+            <div class="order">
+                <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
+                <p><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
+                <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+                <section class="proxy-list">
+                    <h2>Proxy List</h2>
+                    <ul id="proxyList">
+                    {% for proxy in order.proxy_list %}
+                        <li class="proxy-item">{{ loop.index }}. {{ proxy }}</li>
+                    {% endfor %}
+                    </ul>
+                    {% if order.proxy_list|length > 10 %}
+                        <button class="showMoreProxies">Show More</button>
+                        <button class="showLessProxies" style="display: none;">Show Less</button>
+                    {% endif %}
+                </section>
+            </div>
+        {% endfor %}
         </section>
     </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.orders .order').forEach(function(order) {
+        var showMoreButton = order.querySelector('.showMoreProxies');
+        var showLessButton = order.querySelector('.showLessProxies');
+
+        if (showMoreButton && showLessButton) {
+            showMoreButton.addEventListener('click', function() {
+                order.querySelectorAll('.proxy-item').forEach(function(proxy) {
+                    proxy.style.display = 'list-item';
+                });
+                showMoreButton.style.display = 'none';
+                showLessButton.style.display = 'block';
+            });
+
+            showLessButton.addEventListener('click', function() {
+                order.querySelectorAll('.proxy-item').forEach(function(proxy, index) {
+                    if (index >= 10) {
+                        proxy.style.display = 'none';
+                    }
+                });
+                showLessButton.style.display = 'none';
+                showMoreButton.style.display = 'block';
+            });
+        }
+    });
+});
+</script>
 
 {% endblock content %}

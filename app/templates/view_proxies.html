@@ -80,7 +80,7 @@ function loadProxies() {
 
                 var expirationCell = row.insertCell(4);
                 expirationCell.innerHTML = formatDate(proxy.expiration_date);
-                console.log(isExpired(proxy.expiration_date))
+
                 if (isExpired(proxy.expiration_date)) {
                     expirationCell.classList.add("expired");
                 }
@@ -104,11 +104,15 @@ function sortTable(columnName) {
     switching = true;
     direction = "asc";
 
-    function compareValues(x, y, isDate = false) {
+    function compareValues(x, y, isDate = false, isNumber = false) {
         if (isDate) {
             var dateX = parseDate(x.innerHTML);
             var dateY = parseDate(y.innerHTML);
             return dateX - dateY;
+        } else if (isNumber) {
+            var numX = parseFloat(x.innerHTML);
+            var numY = parseFloat(y.innerHTML);
+            return numX - numY;
         } else {
             var xContent = x.innerHTML.toLowerCase();
             var yContent = y.innerHTML.toLowerCase();
@@ -126,7 +130,7 @@ function sortTable(columnName) {
             x = rows[i].getElementsByTagName("TD")[getColumnIndex(columnName)];
             y = rows[i + 1].getElementsByTagName("TD")[getColumnIndex(columnName)];
 
-            var comparisonResult = compareValues(x, y, columnName === 'purchase_date' || columnName === 'expiration_date');
+            var comparisonResult = compareValues(x, y, columnName === 'purchase_date' || columnName === 'expiration_date', columnName === 'proxy_count' || columnName === 'price_per_proxy' || columnName === 'total_price' || columnName === 'profit' || columnName === 'margin');
 
             if (direction == "asc") {
                 if (comparisonResult > 0) {
@@ -152,7 +156,6 @@ function sortTable(columnName) {
         }
     }
 }
-
 
 function getColumnIndex(columnName) {
     switch(columnName) {

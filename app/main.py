@@ -151,5 +151,26 @@ async def delete_order_by_id(customer_name: str, order_id: str):
 
 @app.get("/statistic")
 async def statistic(request: Request):
+    pipeline = [
+        {
+            "$group": {
+                "_id": "$customer_name",
+                "total_proxies": {"$sum": {"$size": "$proxy_list"}}
+            }
+        },
+        {
+            "$group": {
+                "_id": None,
+                "total_users": {"$sum": 1},
+                "total_proxies": {"$sum": "$total_proxies"}
+            }
+        }
+    ]
 
-    return templates.TemplateResponse("statistic.html", {"request": request})
+    result = list(db.proxies.aggregate(pipeline))
+    if result:
+        statistics = result[0]
+    else:
+        statistics = {"total_users": 0, "total_proxies": 0}
+
+    return templates.TemplateResponse("statistic.html", {"request": request, "statistics": statistics})

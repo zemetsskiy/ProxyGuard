@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 
 templates = Jinja2Templates(directory="templates")
 
@@ -60,4 +60,21 @@ async def get_proxies(request: Request, filter: Optional[str] = None):
         key, value = filter.split(':')
         query[key] = value
     proxies = list(db.proxies.find(query))
+
+    for proxy in proxies:
+        proxy_list = proxy.get('proxy_list', [])
+        proxy_count = len(proxy_list)
+        total_price = proxy.get('price', 0) * proxy_count
+        purchase_date = proxy.get('purchase_date')
+        duration_months = proxy.get('duration_months', 0)
+
+        proxy['proxy_count'] = proxy_count
+        proxy['total_price'] = total_price
+        proxy['margin'] = "empty"
+        proxy['profit'] = "empty"
+
+        if purchase_date:
+            expiration_date = purchase_date + timedelta(days=30 * duration_months)
+            proxy['expiration_date'] = expiration_date
+
     return JSONResponse(content=json_util.dumps(proxies))

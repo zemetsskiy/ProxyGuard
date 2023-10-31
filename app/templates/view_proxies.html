@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 {% block content %}
 
 <div style="text-align:center;">
@@ -9,10 +11,14 @@
             <thead>
                 <tr>
                     <th>Customer Name</th>
+                    <th>Proxy Count</th>
+                    <th>Price per Proxy</th>
                     <th>Purchase Date</th>
-                    <th>Duration</th>
-                    <th>Price</th>
-                    <th>Proxy Package</th>
+                    <th>Expiration Date</th>
+                    <th>Package</th>
+                    <th>Total Price</th>
+                    <th>Margin</th>
+                    <th>Profit</th>
                     <!-- Другие колонки -->
                 </tr>
             </thead>
@@ -44,10 +50,14 @@ function loadProxies() {
             proxies.forEach(proxy => {
                 var row = tableBody.insertRow();
                 row.insertCell(0).innerHTML = proxy.customer_name;
-                row.insertCell(1).innerHTML = formatDate(proxy.purchase_date);
-                row.insertCell(2).innerHTML = proxy.duration_months;
-                row.insertCell(3).innerHTML = proxy.price;
-                row.insertCell(4).innerHTML = proxy.proxy_package;
+                row.insertCell(1).innerHTML = proxy.proxy_count;
+                row.insertCell(2).innerHTML = proxy.price;
+                row.insertCell(3).innerHTML = formatDate(proxy.purchase_date);
+                row.insertCell(4).innerHTML = formatDate(proxy.expiration_date);
+                row.insertCell(5).innerHTML = proxy.proxy_package;
+                row.insertCell(6).innerHTML = proxy.total_price;
+                row.insertCell(7).innerHTML = proxy.margin;
+                row.insertCell(8).innerHTML = proxy.profit;
             });
         });
 }

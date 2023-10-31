@@ -20,7 +20,7 @@
             <h2>Proxy List</h2>
             <ul>
                 {% for proxy in profile.proxy_list %}
-                    <li>{{ proxy }}</li>
+                <li><i><strong>{{ loop.index }}.</strong></i> {{ proxy }}</li>
                 {% endfor %}
             </ul>
         </section>

@@ -1,9 +1,63 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Space Mono';font-size: 22px;
+
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+
 table {
     width: 97%;
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
     border-collapse: collapse;
+}
+
+.header-class {
+    background-color: #f2f2f2; /
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.header-class h1 {
+    text-align: left;
+    line-height: 1.5;
+    padding-left: 20px;
+    margin: 0;
+    font-size: 34px;
+    color: #16781c;
+}
+
+
+.header-class a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.header-class a:hover {
+    color: #388E3C;
+}
+
+footer{
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+
 }
 
 th {
@@ -20,6 +74,107 @@ td {
 
 tr:hover {background-color: #f5f5f5;}
 tr:nth-child(even) {background-color: #f2f2f2;}
+
+
+main {
+    display: 1;
+    height: 100%;
+}
+
+main {
+    width: 30%;
+    margin: 40px auto;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    padding: 20px;
+
+}
+
+.form-package {
+    width: auto;
+    margin: 0 auto;
+    margin-top: 30 px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f8f8f8;
+
+}
+
+.form-container {
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #f8f8f8;
+}
+
+.form-input-class, .form-textarea-class {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    color: #383838;
+    background-color: white;
+}
+
+.form-input-class:focus, .form-textarea-class:focus {
+    border-color: #808080;
+    outline: none;
+}
+
+.form-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-button:hover {
+    background-color: #45a049;
+}
+
+.form-button-back {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-button-back:hover {
+    background-color: #b0162c;
+}
+
+.form-pack-btn{
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.fform-pack-btn:hover {
+    background-color: #45a049;
+}
+
+.proxy-count {
+    margin-top: 10px;
+}
 
 .expired {
     background-color: #ffcccc;
@@ -172,5 +327,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
         font-size: 12px;
         border-radius: 5px;
 }
+
 
 

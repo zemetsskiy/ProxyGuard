@@ -1,6 +1,8 @@
 from typing import Optional
 
 from bson import json_util
+from loguru import logger
+
 from database import db
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
@@ -40,13 +42,35 @@ async def add_proxy(request: Request,
         "proxy_list": proxy_array
     }
     db.proxies.insert_one(proxy_document)
-    return {"message": "Proxy added successfully"}
+    return templates.TemplateResponse("view_proxies.html", {"request": request})
 
 
 @app.get("/add_proxy")
 async def add_proxy(request: Request):
-    return templates.TemplateResponse("addition.html", {"request": request})
+    packages = db.packages.find({}, {"_id": 0, "package_name": 1})
+    logger.info(packages)
+    package_names = [package["package_name"] for package in packages]
 
+    return templates.TemplateResponse("addition.html", {"request": request, "options": package_names})
+
+
+@app.get("/add_proxy_package")
+async def add_proxy(request: Request):
+    return templates.TemplateResponse("add_proxy_package.html", {"request": request})
+
+
+@app.post("/add_proxy_package")
+async def add_proxy_package(request: Request,
+                            package_name: str = Form(...),
+                            price_per_proxy: float = Form(...)):
+
+    proxy_package = {
+        "package_name": package_name,
+        "price_per_proxy": price_per_proxy
+    }
+
+    db.packages.insert_one(proxy_package)
+    return templates.TemplateResponse("view_proxies.html", {"request": request})
 
 # @app.get("/view_proxies")
 # async def view_proxies(request: Request):

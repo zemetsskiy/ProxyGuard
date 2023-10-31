@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Add Proxy Package</h1>
+
+<form class="form-package"action="http://127.0.0.1:8000/add_proxy_package" method="post">
+        <label for="package_name">Package name</label>
+        <input class="form-input-class" type="text" id="package_name" name="package_name"  required>
+        <label for="package_name">Price for 1 proxy</label>
+        <input class="form-input-class" type="number" id="price_per_proxy" name="price_per_proxy" step="0.1" required>
+        <button class="form-pack-btn" type="submit">Add</button>
+        <button class="form-button-back" type="button" onclick="window.location.href='/'">Back</button>
+</form>
+{% endblock content %}
+

@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h1>Add Order</h1>
+<div class="form-container">
+    <form action="http://127.0.0.1:8000/add_proxy" method="post">
+        <input class="form-input-class" type="text" name="customer_name" placeholder="Customer Name" required>
+        <input class="form-input-class" type="date" name="purchase_date" required>
+        <input class="form-input-class" type="number" name="duration_months" placeholder="Duration (Months)" required>
+        <input class="form-input-class" type="number" name="price" placeholder="Price for 1 proxy" step="0.01" required>
+<!--        <select class="form-input-class" name="proxy_package" placeholder="Select a proxy package" required>-->
+<!--            <option value="">Select a proxy package</option>-->
+<!--            {% for option in options %}-->
+<!--            <option value="{{ option.column_name }}">{{ option.column_name }}</option>-->
+<!--            {% endfor %}-->
+<!--        </select>-->
 
-<div style="text-align:center;">
-    <h1>Add Proxy</h1>
-    <form action="/add_proxy" method="post">
-        <input type="text" name="customer_name" placeholder="Customer Name" required><br>
-        <input type="date" name="purchase_date" required><br>
-        <input type="number" name="duration_months" placeholder="Duration (Months)" required><br>
-        <input type="number" name="price" placeholder="Price" step="0.01" required><br>
-        <input type="text" name="proxy_package" placeholder="Proxy Package" required><br>
-        <textarea name="proxy_list" id="proxyList" placeholder="Enter proxies here..." oninput="updateProxyCount()"></textarea><br>
-        <span id="proxyCount">0</span> proxies added.<br>
-        <button type="submit">Add Proxy</button>
+        <select class="form-input-class" name="proxy_package" required>
+            <option value="">Select a proxy package</option>
+            {% for package_name in options %}
+            <option value="{{ package_name }}">{{ package_name }}</option>
+            {% endfor %}
+        </select>
+        <textarea class="form-textarea-class" name="proxy_list" id="proxyList" placeholder="Enter proxies here..."
+                  oninput="updateProxyCount()"></textarea>
+        <div id="proxyCount">Proxy Count: 0</div>
+        <button class="form-button" type="submit">Add</button>
+        <button class="form-button-back" type="button" onclick="window.location.href='/'">Back</button>
     </form>
 </div>
 
@@ -23,7 +36,7 @@
         if (proxyList[proxyList.length - 1] === '') {
             proxyCount -= 1;
         }
-        document.getElementById('proxyCount').innerText = proxyCount;
+        document.getElementById('proxyCount').textContent = 'Proxy Count: ' + proxyCount;
     }
 </script>
 

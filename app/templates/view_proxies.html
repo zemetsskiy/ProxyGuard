@@ -3,8 +3,7 @@
 {% block content %}
 <main style="height: 100%;">
     <div style="text-align:center;">
-        <input type="text" id="filter" placeholder="Enter filter (e.g., customer_name:Ivan)">
-        <button onclick="loadProxies()">Filter</button>
+            <input type="text" id="searchInput" placeholder="Search by Customer Name...">
         <div style="height: 500px; overflow: auto;">
             <table id="proxiesTable">
                 <thead>
@@ -48,6 +47,26 @@
                         }
                     });
                 }
+
+                var searchInput = document.getElementById('searchInput');
+
+                searchInput.addEventListener('input', function() {
+                var filter = searchInput.value.toUpperCase();
+                var table = document.getElementById('proxiesTable');
+                var tr = table.getElementsByTagName('tr');
+
+                for (var i = 0; i < tr.length; i++) {
+                    var td = tr[i].getElementsByTagName('td')[0];
+                    if (td) {
+                        var txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                          tr[i].style.display = "";
+                     } else {
+                          tr[i].style.display = "none";
+                        }
+                    }
+                }
+    });
             });
 
         function isExpired(expirationDateString) {
@@ -67,8 +86,7 @@
         }
 
         function loadProxies() {
-            var filter = document.getElementById('filter').value;
-            fetch('/get_proxies?filter=' + filter)
+            fetch('/get_proxies')
                 .then(response => response.json())
                 .then(data => {
                     var proxies = JSON.parse(data);

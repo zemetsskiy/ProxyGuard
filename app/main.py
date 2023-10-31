@@ -17,7 +17,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("view_proxies.html", {"request": request})
 
 
 @app.post("/add_proxy")
@@ -48,9 +48,9 @@ async def add_proxy(request: Request):
     return templates.TemplateResponse("addition.html", {"request": request})
 
 
-@app.get("/view_proxies")
-async def view_proxies(request: Request):
-    return templates.TemplateResponse("view_proxies.html", {"request": request})
+# @app.get("/view_proxies")
+# async def view_proxies(request: Request):
+#     return templates.TemplateResponse("view_proxies.html", {"request": request})
 
 
 @app.get("/get_proxies")
@@ -82,26 +82,30 @@ async def get_proxies(request: Request, filter: Optional[str] = None):
 
 @app.get("/profile/{customer_name}")
 async def get_profile_by_customer_name(request: Request, customer_name: str):
-    customer_data = db.proxies.find_one({"customer_name": customer_name})
+    cursor = db.proxies.find({"customer_name": customer_name})
 
-    proxy_list = customer_data.get('proxy_list', [])
-    proxy_count = len(proxy_list)
-    total_price = customer_data.get('price', 0) * proxy_count
-    purchase_date = customer_data.get('purchase_date')
-    duration_months = customer_data.get('duration_months', 0)
+    orders = []
+    for order in cursor:
+        proxy_list = order.get('proxy_list', [])
+        proxy_count = len(proxy_list)
+        total_price = order.get('price', 0) * proxy_count
+        purchase_date = order.get('purchase_date')
+        duration_months = order.get('duration_months', 0)
 
-    if purchase_date:
-        expiration_date = purchase_date + timedelta(days=30 * duration_months)
-        customer_data['expiration_date'] = expiration_date.strftime('%Y-%m-%d')
-        customer_data['purchase_date'] = purchase_date.strftime('%Y-%m-%d')
+        if purchase_date:
+            expiration_date = purchase_date + timedelta(days=30 * duration_months)
+            order['expiration_date'] = expiration_date.strftime('%Y-%m-%d')
+            order['purchase_date'] = purchase_date.strftime('%Y-%m-%d')
 
-    customer_data['proxy_count'] = proxy_count
-    customer_data['total_price'] = total_price
-    customer_data['margin'] = "empty"
-    customer_data['profit'] = "empty"
+        order['proxy_count'] = proxy_count
+        order['total_price'] = total_price
+        order['margin'] = "empty"
+        order['profit'] = "empty"
 
-    if customer_data:
-        print(customer_data)
-        return templates.TemplateResponse("profile.html", {"request": request, "profile": customer_data})
-        #return JSONResponse(content=json_util.dumps(customer_data))
+        orders.append(order)
+
+    if orders:
+        return templates.TemplateResponse("profile.html",
+                                          {"request": request, "orders": orders, "customer_name": customer_name})
+
     return JSONResponse(content={}, status_code=404)

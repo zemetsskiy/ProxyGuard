@@ -12,7 +12,11 @@
             <div class="order" data-expiration="{{ order.expiration_date }}">
                 <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
                 <p><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
+                <p><strong>Price:</strong> {{ order.price_per_proxy}}</p>
+                <p><strong>Quantity:</strong> {{ order.proxy_count}}</p>
                 <p><strong>Total Price:</strong> {{ order.total_price }}</p>
+                <p><strong>Margin:</strong> {{ order.margin}}</p>
+                <p><strong>Profit:</strong> {{ order.profit}}</p>
                 <section class="proxy-list">
                     <h2>Proxy List</h2>
                     <ul id="proxyList">

@@ -1,3 +1,5 @@
+import os
+
 from typing import Optional
 
 from bson import json_util
@@ -10,11 +12,16 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta
 
-templates = Jinja2Templates(directory="templates")
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+static_dir = os.path.join(base_dir, 'static')
+templates_dir = os.path.join(base_dir, 'templates')
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+templates = Jinja2Templates(directory=templates_dir)
 
 
 @app.get("/")
@@ -225,3 +232,8 @@ async def statistic(request: Request):
         statistics = {"total_users": 0, "total_proxies": 0}
 
     return templates.TemplateResponse("statistic.html", {"request": request, "statistics": statistics})
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

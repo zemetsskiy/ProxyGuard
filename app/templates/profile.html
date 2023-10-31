@@ -10,7 +10,6 @@
         <section class="orders">
         {% for order in orders %}
             <div class="order" data-id="{{ order._id }}" data-customer="{{ customer_name }}" data-expiration="{{ order.expiration_date }}">
-                <div class="order-header">
                 <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
                 <p><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
                 <p><strong>Price:</strong> {{ order.price_per_proxy}}</p>
@@ -18,7 +17,6 @@
                 <p><strong>Total Price:</strong> {{ order.total_price }}</p>
                 <p><strong>Margin:</strong> {{ order.margin}}</p>
                 <p><strong>Profit:</strong> {{ order.profit}}</p>
-                </div>
                 <div class="order-content">
                 <section class="proxy-list">
                     <h2>Proxy List</h2>
@@ -88,6 +86,12 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.orders .order').forEach(function(order) {
         var deleteButton = order.querySelector('.delete-button');
         deleteButton.addEventListener('click', function() {
+            // Добавляем подтверждение перед удалением
+            var confirmation = confirm("Are you sure you want to delete this order?");
+            if (!confirmation) {
+                return; // Если пользователь отказался, прекращаем выполнение функции
+            }
+
             var orderId = order.getAttribute('data-id');
             var customerName = order.getAttribute('data-customer');
 

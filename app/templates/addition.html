@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<main class="main-add">
 <h1>Add Order</h1>
 <div class="form-container">
     <form action="http://127.0.0.1:8000/add_proxy" method="post">
@@ -39,5 +40,5 @@
         document.getElementById('proxyCount').textContent = 'Proxy Count: ' + proxyCount;
     }
 </script>
-
+</main>
 {% endblock content %}

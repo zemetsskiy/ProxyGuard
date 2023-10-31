@@ -9,7 +9,6 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
 }
 
 .header-class {
@@ -91,6 +90,17 @@ footer{
     border-top: 1px solid #ddd;
 
 }
+
+.footer-button {
+
+    color: #fff; /* Белый текст */
+    padding: 10px 20px; /* Внутренние отступы */
+    border: 2px solid #4CAF50; /* Толщина рамки и её зеленый цвет */
+    border-radius: 5px; /* Закругленные углы */
+    cursor: pointer; /* Изменение курсора при наведении */
+    text-decoration: none; /* Убираем подчеркивание у ссылок-кнопок */
+}
+
 
 th {
     background-color: #4CAF50;
@@ -366,3 +376,8 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
 
 
+.footer-button:hover {
+    background-color: #c8f0bf; /* Оттенок зеленого при наведении */
+    color: #fff; /* Белый текст при наведении */
+    border: 2px solid #45a049; /* Изменяем цвет рамки при наведении */
+}

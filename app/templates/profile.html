@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+        <header>
+            <h1>Profile Information</h1>
+        </header>
+        <section class="profile-info">
+            <div class="info">
+                <p><strong>Name:</strong> {{ profile.customer_name }}</p>
+                <p><strong>Purchase Date:</strong> {{ profile.purchase_date }}</p>
+                <p><strong>Expiration Date:</strong> {{ profile.expiration_date }}</p>
+                <p><strong>Total Price:</strong> {{ profile.total_price }}</p>
+                <!-- Другие детали -->
+            </div>
+        </section>
+
+        <section class="proxy-list">
+            <h2>Proxy List</h2>
+            <ul>
+                {% for proxy in profile.proxy_list %}
+                    <li>{{ proxy }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+
+
+{% endblock content %}

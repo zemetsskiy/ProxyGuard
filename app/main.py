@@ -148,3 +148,8 @@ async def delete_order_by_id(customer_name: str, order_id: str):
     from bson import ObjectId
     db.proxies.delete_one({"customer_name": customer_name, "_id": ObjectId(order_id)})
     return {"message": "Order deleted successfully"}
+
+@app.get("/statistic")
+async def statistic(request: Request):
+
+    return templates.TemplateResponse("statistic.html", {"request": request})

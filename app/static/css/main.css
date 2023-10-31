@@ -71,6 +71,18 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     background-color: #f9f9f9;
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+.order:hover {
+    transform: scale(1.01);
+    z-index: 0.05;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+}
+
+.order.expired {
+    background-color: #ff9999;
 }
 
 .proxy-item:nth-child(n+11) {

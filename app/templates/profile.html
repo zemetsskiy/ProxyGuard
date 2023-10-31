@@ -9,7 +9,7 @@
 
         <section class="orders">
         {% for order in orders %}
-            <div class="order">
+            <div class="order" data-expiration="{{ order.expiration_date }}">
                 <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
                 <p><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
                 <p><strong>Total Price:</strong> {{ order.total_price }}</p>
@@ -54,6 +54,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 showLessButton.style.display = 'none';
                 showMoreButton.style.display = 'block';
             });
+        }
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.orders .order').forEach(function(order) {
+        var expirationDateStr = order.getAttribute('data-expiration');
+        var expirationDate = new Date(expirationDateStr);
+
+        if (expirationDate < new Date()) {
+            order.classList.add('expired');
         }
     });
 });

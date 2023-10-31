@@ -72,6 +72,11 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     border-radius: 10px;
     background-color: #f9f9f9;
     transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .order:hover {
@@ -79,6 +84,19 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     z-index: 0.05;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     background-color: #fff;
+}
+
+.order-content {
+    margin-top: -15px;
+    flex-grow: 1;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 10px;
+    margin-top: -10px;
 }
 
 .order.expired {
@@ -90,17 +108,41 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 }
 
 .showMoreProxies, .showLessProxies {
-    padding: 10px 20px;
-    background-color: #f2f2f2;
-    color: #333;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    background: none;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    margin: 0;
 }
 
-#showMoreProxies:hover, #showLessProxies:hover {
-    background-color: #e0e0e0;
-    color: #000;
+.showMoreProxies i, .showLessProxies i {
+    color: #337ab7;
+    font-size: 1em;
+}
+
+.showMoreProxies:hover i, .showLessProxies:hover i {
+    color: #23527c;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.delete-button i.fa-trash {
+    color: #d9534f;
+    font-size: 1.2em;
+}
+
+.delete-button:hover i.fa-trash {
+    color: #b52b27;
 }

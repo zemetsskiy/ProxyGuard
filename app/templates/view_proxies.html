@@ -92,6 +92,12 @@ function loadProxies() {
             });
         });
 }
+
+function parseDate(ddmmyyyy) {
+    var parts = ddmmyyyy.split(".");
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
 function sortTable(columnName) {
     var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
     table = document.getElementById("proxiesTable");
@@ -100,8 +106,9 @@ function sortTable(columnName) {
 
     function compareValues(x, y, isDate = false) {
         if (isDate) {
-            console.log(Date(x.innerHTML))
-            return new Date(x.innerHTML) - new Date(y.innerHTML);
+            var dateX = parseDate(x.innerHTML);
+            var dateY = parseDate(y.innerHTML);
+            return dateX - dateY;
         } else {
             var xContent = x.innerHTML.toLowerCase();
             var yContent = y.innerHTML.toLowerCase();

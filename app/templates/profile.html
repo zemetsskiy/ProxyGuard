@@ -37,7 +37,10 @@
                     <button class="delete-button">
                             <i class="fa fa-trash"></i>
                     </button>
-                    </div>
+                    <button class="copy-proxies-button">
+                            <i class="fa fa-copy"></i>
+                    </button>
+                </div>
             </div>
         {% endfor %}
         </section>
@@ -104,6 +107,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => alert("Network error: " + error.message));
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.orders .order').forEach(function(order) {
+        var copyButton = order.querySelector('.copy-proxies-button');
+        copyButton.addEventListener('click', function() {
+            var proxyList = order.querySelector('.proxy-list ul');
+            var proxyText = '';
+            proxyList.querySelectorAll('li').forEach(function(proxyItem) {
+                var proxyInfo = proxyItem.textContent.split('. ')[1].trim();
+                proxyText += (proxyText ? '\n' : '') + proxyInfo;
+            });
+
+            navigator.clipboard.writeText(proxyText).then(function() {
+                console.log('Proxies copied to clipboard successfully.');
+                alert('Proxies copied to clipboard!');
+            }, function(err) {
+                console.error('Could not copy proxies: ', err);
+                alert('Error copying proxies to clipboard.');
+            });
         });
     });
 });

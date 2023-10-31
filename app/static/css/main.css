@@ -12,8 +12,40 @@ body {
     min-height: 100vh;
 }
 
+.header-class {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
 
+.header-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+.logo a {
+    text-decoration: none;
+    color: black;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    margin-right: 300px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: blue;
+    margin: 0 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
 table {
     width: 97%;

@@ -31,6 +31,23 @@
 
 <script>
 
+document.addEventListener('DOMContentLoaded', function() {
+        var table = document.getElementById('proxiesTable');
+        if (table) {
+            table.addEventListener('click', function(event) {
+                var target = event.target;
+                while (target && target.nodeName !== 'TR') {
+                    target = target.parentNode;
+                }
+                if (target) {
+                    var cells = target.getElementsByTagName('td');
+                    var customerName = cells[0].innerText;
+                    window.location.href = '/profile/' + encodeURIComponent(customerName);
+                }
+            });
+        }
+    });
+
 function isExpired(expirationDateString) {
     var today = new Date();
     console.log(today)

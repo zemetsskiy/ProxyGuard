@@ -28,7 +28,7 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 
 /* Profile */
 .container {
-    max-width: 600px;
+    width: 90%;
     margin: auto;
     padding: 20px;
     background-color: #f9f9f9;
@@ -54,4 +54,41 @@ tr:nth-child(even) {background-color: #f2f2f2;}
     margin-bottom: 10px;
     font-size: 1em;
     position: relative;
+}
+
+
+.orders {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.order {
+    flex: 1 1 1 calc(33.333% - 20px);
+    margin: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.proxy-item:nth-child(n+11) {
+    display: none;
+}
+
+.showMoreProxies, .showLessProxies {
+    padding: 10px 20px;
+    background-color: #f2f2f2;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    margin-top: 10px;
+}
+
+#showMoreProxies:hover, #showLessProxies:hover {
+    background-color: #e0e0e0;
+    color: #000;
 }

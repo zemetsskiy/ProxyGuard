@@ -78,3 +78,30 @@ async def get_proxies(request: Request, filter: Optional[str] = None):
             proxy['expiration_date'] = expiration_date
 
     return JSONResponse(content=json_util.dumps(proxies))
+
+
+@app.get("/profile/{customer_name}")
+async def get_profile_by_customer_name(request: Request, customer_name: str):
+    customer_data = db.proxies.find_one({"customer_name": customer_name})
+
+    proxy_list = customer_data.get('proxy_list', [])
+    proxy_count = len(proxy_list)
+    total_price = customer_data.get('price', 0) * proxy_count
+    purchase_date = customer_data.get('purchase_date')
+    duration_months = customer_data.get('duration_months', 0)
+
+    if purchase_date:
+        expiration_date = purchase_date + timedelta(days=30 * duration_months)
+        customer_data['expiration_date'] = expiration_date.strftime('%Y-%m-%d')
+        customer_data['purchase_date'] = purchase_date.strftime('%Y-%m-%d')
+
+    customer_data['proxy_count'] = proxy_count
+    customer_data['total_price'] = total_price
+    customer_data['margin'] = "empty"
+    customer_data['profit'] = "empty"
+
+    if customer_data:
+        print(customer_data)
+        return templates.TemplateResponse("profile.html", {"request": request, "profile": customer_data})
+        #return JSONResponse(content=json_util.dumps(customer_data))
+    return JSONResponse(content={}, status_code=404)

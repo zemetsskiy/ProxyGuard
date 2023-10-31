@@ -110,3 +110,10 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         return templates.TemplateResponse("profile.html", {"request": request, "orders": orders, "customer_name": customer_name})
 
     return JSONResponse(content={}, status_code=404)
+
+
+@app.delete("/delete_order/{customer_name}/{order_id}")
+async def delete_order_by_id(customer_name: str, order_id: str):
+    from bson import ObjectId
+    db.proxies.delete_one({"customer_name": customer_name, "_id": ObjectId(order_id)})
+    return {"message": "Order deleted successfully"}

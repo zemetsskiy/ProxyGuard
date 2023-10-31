@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Proxy Package</title>
+    <link rel="stylesheet" href="style.css"> <!-- Предполагается, что стили определены в 'style.css' -->
+</head>
+<body>
+    <header>
+        <h1>Add Proxy Package</h1>
+    </header>
+    <main>
+        <form action="/add_proxy_package" method="post">
+            <div>
+                <label for="package_name">Package Name:</label>
+                <input type="text" id="package_name" name="package_name" required>
+            </div>
+            <div>
+                <label for="price_per_proxy">Price per Proxy:</label>
+                <input type="number" id="price_per_proxy" name="price_per_proxy" step="0.01" required>
+            </div>
+            <div>
+                <button type="submit">Add Package</button>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

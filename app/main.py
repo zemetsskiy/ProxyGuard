@@ -88,7 +88,8 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
     for order in cursor:
         proxy_list = order.get('proxy_list', [])
         proxy_count = len(proxy_list)
-        total_price = order.get('price', 0) * proxy_count
+        price_per_proxy = order.get('price', 0)
+        total_price = price_per_proxy * proxy_count
         purchase_date = order.get('purchase_date')
         duration_months = order.get('duration_months', 0)
 
@@ -98,14 +99,14 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
             order['purchase_date'] = purchase_date.strftime('%Y-%m-%d')
 
         order['proxy_count'] = proxy_count
+        order['price_per_proxy'] = price_per_proxy
         order['total_price'] = total_price
-        order['margin'] = "empty"
-        order['profit'] = "empty"
+        order['margin'] = "SOON"
+        order['profit'] = "SOON"
 
         orders.append(order)
 
     if orders:
-        return templates.TemplateResponse("profile.html",
-                                          {"request": request, "orders": orders, "customer_name": customer_name})
+        return templates.TemplateResponse("profile.html", {"request": request, "orders": orders, "customer_name": customer_name})
 
     return JSONResponse(content={}, status_code=404)

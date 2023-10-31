@@ -28,17 +28,15 @@
                 </section>
                 </div>
                 <div class="order-footer">
-                    {% if order.proxy_list|length > 10 %}
-                        <button class="showMoreProxies">
+                    <button class="showMoreProxies">
                             <i class="fa fa-plus"></i>
-                        </button>
-                        <button class="showLessProxies" style="display: none;">
+                    </button>
+                    <button class="showLessProxies" style="display: none;">
                             <i class="fa fa-minus"></i>
-                        </button>
-                        <button class="delete-button">
+                    </button>
+                    <button class="delete-button">
                             <i class="fa fa-trash"></i>
-                        </button>
-                    {% endif %}
+                    </button>
                     </div>
             </div>
         {% endfor %}

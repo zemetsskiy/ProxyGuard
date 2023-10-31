@@ -11,19 +11,17 @@
             <thead>
                 <tr>
                     <th>Customer Name</th>
-                    <th id="proxyCountHeader">Proxy Count <i class="sort-icon fas fa-sort"></i></th>
-                    <th>Price per Proxy</th>
-                    <th>Purchase Date</th>
-                    <th>Expiration Date</th>
+                    <th id="proxyCountHeader">Proxy Count <i class="sort-icon fas fa-sort" onclick="sortTable('proxy_count')"></i></th>
+                    <th id="pricePerProxyHeader">Price per Proxy <i class="sort-icon fas fa-sort" onclick="sortTable('price_per_proxy')"></i></th>
+                    <th id="purchaseDateHeader">Purchase Date <i class="sort-icon fas fa-sort" onclick="sortTable('purchase_date')"></i></th>
+                    <th>Expiration Date <i class="sort-icon fas fa-sort" onclick="sortTable('expiration_date')"></i></th>
                     <th>Package</th>
-                    <th>Total Price</th>
-                    <th>Margin</th>
-                    <th>Profit</th>
-                    <!-- Другие колонки -->
+                    <th id="totalPriceHeader">Total Price <i class="sort-icon fas fa-sort" onclick="sortTable('total_price')"></i></th>
+                    <th>Margin <i class="sort-icon fas fa-sort" onclick="sortTable('margin')"></i></th>
+                    <th id="profitHeader">Profit <i class="sort-icon fas fa-sort" onclick="sortTable('profit')"></i></th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Данные будут загружены здесь -->
             </tbody>
         </table>
     </div>
@@ -45,30 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-
-        var isAscending = true;
-        document.getElementById('proxyCountHeader').addEventListener('click', function() {
-        var tableBody = document.getElementById('proxiesTable').getElementsByTagName('tbody')[0];
-        var rows = Array.from(tableBody.rows);
-
-        // Сортировка строк
-        rows.sort(function(a, b) {
-            var valA = parseInt(a.cells[1].innerText); // Proxy Count во второй ячейке
-            var valB = parseInt(b.cells[1].innerText);
-
-            return isAscending ? valA - valB : valB - valA;
-        });
-
-        // Очищаем и добавляем отсортированные строки
-        tableBody.innerHTML = '';
-        rows.forEach(function(row) {
-            tableBody.appendChild(row);
-        });
-
-        // Меняем направление сортировки и иконку
-        isAscending = !isAscending;
-        document.getElementById('sortIcon').textContent = isAscending ? '↑' : '↓';
-    });
     });
 
 function isExpired(expirationDateString) {
@@ -99,7 +73,6 @@ function loadProxies() {
             proxies.forEach(proxy => {
                 var row = tableBody.insertRow();
 
-
                 row.insertCell(0).innerHTML = proxy.customer_name;
                 row.insertCell(1).innerHTML = proxy.proxy_count;
                 row.insertCell(2).innerHTML = proxy.price;
@@ -118,6 +91,73 @@ function loadProxies() {
                 row.insertCell(8).innerHTML = proxy.profit;
             });
         });
+}
+function sortTable(columnName) {
+    var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
+    table = document.getElementById("proxiesTable");
+    switching = true;
+    direction = "asc";
+
+    function compareValues(x, y, isDate = false) {
+        if (isDate) {
+            console.log(Date(x.innerHTML))
+            return new Date(x.innerHTML) - new Date(y.innerHTML);
+        } else {
+            var xContent = x.innerHTML.toLowerCase();
+            var yContent = y.innerHTML.toLowerCase();
+            if (xContent < yContent) return -1;
+            if (xContent > yContent) return 1;
+            return 0;
+        }
+    }
+
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[getColumnIndex(columnName)];
+            y = rows[i + 1].getElementsByTagName("TD")[getColumnIndex(columnName)];
+
+            var comparisonResult = compareValues(x, y, columnName === 'purchase_date' || columnName === 'expiration_date');
+
+            if (direction == "asc") {
+                if (comparisonResult > 0) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (direction == "desc") {
+                if (comparisonResult < 0) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && direction == "asc") {
+                direction = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+
+function getColumnIndex(columnName) {
+    switch(columnName) {
+        case 'proxy_count': return 1;
+        case 'price_per_proxy': return 2;
+        case 'purchase_date': return 3;
+        case 'expiration_date': return 4;
+        case 'total_price': return 6;
+        case 'margin': return 7;
+        case 'profit': return 8;
+        default: return 0;
+    }
 }
 loadProxies()
 </script>

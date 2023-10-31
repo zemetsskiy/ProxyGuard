@@ -72,37 +72,43 @@ async def add_proxy_package(request: Request,
     db.packages.insert_one(proxy_package)
     return templates.TemplateResponse("view_proxies.html", {"request": request})
 
-# @app.get("/view_proxies")
-# async def view_proxies(request: Request):
-#     return templates.TemplateResponse("view_proxies.html", {"request": request})
-
 
 @app.get("/get_proxies")
 async def get_proxies(request: Request):
-    proxies = list(db.proxies.find())
+    orders = list(db.proxies.find())
 
-    for proxy in proxies:
-        proxy_list = proxy.get('proxy_list', [])
+    for order in orders:
+        proxy_list = order.get('proxy_list', [])
         proxy_count = len(proxy_list)
-        total_price = round(proxy.get('price', 0) * proxy_count, 3)
-        purchase_date = proxy.get('purchase_date')
-        duration_months = proxy.get('duration_months', 0)
+        price_per_proxy = order.get('price_per_proxy')
+        total_price = round(order.get('price', 0) * proxy_count, 3)
+        purchase_date = order.get('purchase_date')
+        duration_months = order.get('duration_months', 0)
+        proxy_package = order.get('proxy_package')
 
-        proxy['proxy_count'] = proxy_count
-        proxy['total_price'] = total_price
-        proxy['margin'] = "empty"
-        proxy['profit'] = "empty"
+        order['proxy_count'] = proxy_count
+        order['total_price'] = total_price
+        order['price_per_proxy'] = price_per_proxy
+        order['total_price'] = total_price
+
+        package_data = db.packages.find_one({"package_name": proxy_package})
+
+        margin = package_data['price_per_proxy'] * proxy_count
+        order['margin'] = round(margin, 2)
+        order['profit'] = round((total_price - margin), 2)
 
         if purchase_date:
             expiration_date = purchase_date + timedelta(days=30 * duration_months)
-            proxy['expiration_date'] = expiration_date
+            order['expiration_date'] = expiration_date
 
-    return JSONResponse(content=json_util.dumps(proxies))
+    return JSONResponse(content=json_util.dumps(orders))
 
 
 @app.get("/profile/{customer_name}")
 async def get_profile_by_customer_name(request: Request, customer_name: str):
     cursor = db.proxies.find({"customer_name": customer_name})
+
+
 
     orders = []
     for order in cursor:
@@ -112,6 +118,7 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         total_price = round(price_per_proxy * proxy_count, 2)
         purchase_date = order.get('purchase_date')
         duration_months = order.get('duration_months', 0)
+        proxy_package = order.get('proxy_package')
 
         if purchase_date:
             expiration_date = purchase_date + timedelta(days=30 * duration_months)
@@ -121,8 +128,12 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         order['proxy_count'] = proxy_count
         order['price_per_proxy'] = price_per_proxy
         order['total_price'] = total_price
-        order['margin'] = "SOON"
-        order['profit'] = "SOON"
+
+        package_data = db.packages.find_one({"package_name": proxy_package})
+
+        margin = package_data['price_per_proxy'] * proxy_count
+        order['margin'] = round(margin, 2)
+        order['profit'] = round((total_price - margin), 2)
 
         orders.append(order)
 

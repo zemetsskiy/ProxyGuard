@@ -3,20 +3,18 @@
 {% block content %}
 
 <div class="container">
-        <header>
-            <h1>{{customer_name}}</h1>
-        </header>
+            <h1 class="cont-h1">{{customer_name}}</h1>
 
         <section class="orders">
         {% for order in orders %}
             <div class="order" data-id="{{ order._id }}" data-customer="{{ customer_name }}" data-expiration="{{ order.expiration_date }}">
-                <p><strong>Purchase Date:</strong> {{ order.purchase_date }}</p>
-                <p><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
-                <p><strong>Price:</strong> {{ order.price_per_proxy}}</p>
-                <p><strong>Quantity:</strong> {{ order.proxy_count}}</p>
-                <p><strong>Total Price:</strong> {{ order.total_price }}</p>
-                <p><strong>Margin:</strong> {{ order.margin}}</p>
-                <p><strong>Profit:</strong> {{ order.profit}}</p>
+                <p class="p-profile"><strong class=".order-info">Purchase Date:</strong> {{ order.purchase_date }}</p>
+                <p class="p-profile"><strong>Expiration Date:</strong> {{ order.expiration_date }}</p>
+                <p class="p-profile"><strong>Price:</strong> {{ order.price_per_proxy}}</p>
+                <p class="p-profile"><strong>Quantity:</strong> {{ order.proxy_count}}</p>
+                <p class="p-profile"><strong>Total Price:</strong> {{ order.total_price }}</p>
+                <p class="p-profile"><strong>Margin:</strong> {{ order.margin}}</p>
+                <p class="p-profile"><strong>Profit:</strong> {{ order.profit}}</p>
                 <div class="order-content">
                 <section class="proxy-list">
                     <h2>Proxy List</h2>

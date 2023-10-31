@@ -1,3 +1,5 @@
+{% extends 'base.html' %}
+
 {% block content %}
 
 <div style="text-align:center;">
@@ -9,21 +11,48 @@
             <thead>
                 <tr>
                     <th>Customer Name</th>
-                    <th>Purchase Date</th>
-                    <th>Duration</th>
-                    <th>Price</th>
-                    <th>Proxy Package</th>
-                    <!-- Другие колонки -->
+                    <th id="proxyCountHeader">Proxy Count <i class="sort-icon fas fa-sort" onclick="sortTable('proxy_count')"></i></th>
+                    <th id="pricePerProxyHeader">Price per Proxy <i class="sort-icon fas fa-sort" onclick="sortTable('price_per_proxy')"></i></th>
+                    <th id="purchaseDateHeader">Purchase Date <i class="sort-icon fas fa-sort" onclick="sortTable('purchase_date')"></i></th>
+                    <th>Expiration Date <i class="sort-icon fas fa-sort" onclick="sortTable('expiration_date')"></i></th>
+                    <th>Package</th>
+                    <th id="totalPriceHeader">Total Price <i class="sort-icon fas fa-sort" onclick="sortTable('total_price')"></i></th>
+                    <th>Margin <i class="sort-icon fas fa-sort" onclick="sortTable('margin')"></i></th>
+                    <th id="profitHeader">Profit <i class="sort-icon fas fa-sort" onclick="sortTable('profit')"></i></th>
                 </tr>
             </thead>
             <tbody>
-                <!-- Данные будут загружены здесь -->
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+        var table = document.getElementById('proxiesTable');
+        if (table) {
+            table.addEventListener('click', function(event) {
+                var target = event.target;
+                while (target && target.nodeName !== 'TR') {
+                    target = target.parentNode;
+                }
+                if (target) {
+                    var cells = target.getElementsByTagName('td');
+                    var customerName = cells[0].innerText;
+                    window.location.href = '/profile/' + encodeURIComponent(customerName);
+                }
+            });
+        }
+    });
+
+function isExpired(expirationDateString) {
+    var today = new Date();
+    console.log(today)
+    var expirationDate = new Date(expirationDateString.$date);
+    console.log(expirationDate)
+    return expirationDate < today;
+}
+
 function formatDate(dateObject) {
     if (dateObject && dateObject.$date) {
         var date = new Date(dateObject.$date);
@@ -43,13 +72,102 @@ function loadProxies() {
 
             proxies.forEach(proxy => {
                 var row = tableBody.insertRow();
+
                 row.insertCell(0).innerHTML = proxy.customer_name;
-                row.insertCell(1).innerHTML = formatDate(proxy.purchase_date);
-                row.insertCell(2).innerHTML = proxy.duration_months;
-                row.insertCell(3).innerHTML = proxy.price;
-                row.insertCell(4).innerHTML = proxy.proxy_package;
+                row.insertCell(1).innerHTML = proxy.proxy_count;
+                row.insertCell(2).innerHTML = proxy.price;
+                row.insertCell(3).innerHTML = formatDate(proxy.purchase_date);
+
+                var expirationCell = row.insertCell(4);
+                expirationCell.innerHTML = formatDate(proxy.expiration_date);
+
+                if (isExpired(proxy.expiration_date)) {
+                    expirationCell.classList.add("expired");
+                }
+
+                row.insertCell(5).innerHTML = proxy.proxy_package;
+                row.insertCell(6).innerHTML = proxy.total_price;
+                row.insertCell(7).innerHTML = proxy.margin;
+                row.insertCell(8).innerHTML = proxy.profit;
             });
         });
+}
+
+function parseDate(ddmmyyyy) {
+    var parts = ddmmyyyy.split(".");
+    return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
+function sortTable(columnName) {
+    var table, rows, switching, i, x, y, shouldSwitch, direction, switchcount = 0;
+    table = document.getElementById("proxiesTable");
+    switching = true;
+    direction = "asc";
+
+    function compareValues(x, y, isDate = false, isNumber = false) {
+        if (isDate) {
+            var dateX = parseDate(x.innerHTML);
+            var dateY = parseDate(y.innerHTML);
+            return dateX - dateY;
+        } else if (isNumber) {
+            var numX = parseFloat(x.innerHTML);
+            var numY = parseFloat(y.innerHTML);
+            return numX - numY;
+        } else {
+            var xContent = x.innerHTML.toLowerCase();
+            var yContent = y.innerHTML.toLowerCase();
+            if (xContent < yContent) return -1;
+            if (xContent > yContent) return 1;
+            return 0;
+        }
+    }
+
+    while (switching) {
+        switching = false;
+        rows = table.rows;
+        for (i = 1; i < (rows.length - 1); i++) {
+            shouldSwitch = false;
+            x = rows[i].getElementsByTagName("TD")[getColumnIndex(columnName)];
+            y = rows[i + 1].getElementsByTagName("TD")[getColumnIndex(columnName)];
+
+            var comparisonResult = compareValues(x, y, columnName === 'purchase_date' || columnName === 'expiration_date', columnName === 'proxy_count' || columnName === 'price_per_proxy' || columnName === 'total_price' || columnName === 'profit' || columnName === 'margin');
+
+            if (direction == "asc") {
+                if (comparisonResult > 0) {
+                    shouldSwitch = true;
+                    break;
+                }
+            } else if (direction == "desc") {
+                if (comparisonResult < 0) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+        }
+        if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchcount++;
+        } else {
+            if (switchcount == 0 && direction == "asc") {
+                direction = "desc";
+                switching = true;
+            }
+        }
+    }
+}
+
+function getColumnIndex(columnName) {
+    switch(columnName) {
+        case 'proxy_count': return 1;
+        case 'price_per_proxy': return 2;
+        case 'purchase_date': return 3;
+        case 'expiration_date': return 4;
+        case 'total_price': return 6;
+        case 'margin': return 7;
+        case 'profit': return 8;
+        default: return 0;
+    }
 }
 loadProxies()
 </script>

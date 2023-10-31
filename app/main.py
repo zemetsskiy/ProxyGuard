@@ -149,6 +149,55 @@ async def delete_order_by_id(customer_name: str, order_id: str):
     db.proxies.delete_one({"customer_name": customer_name, "_id": ObjectId(order_id)})
     return {"message": "Order deleted successfully"}
 
+
+def get_total_profit():
+    profit_pipeline = [
+        {
+            "$lookup": {
+                "from": "packages",
+                "localField": "proxy_package",
+                "foreignField": "package_name",
+                "as": "package_info"
+            }
+        },
+        {
+            "$unwind": "$package_info"
+        },
+        {
+            "$project": {
+                "proxy_count": {"$size": "$proxy_list"},
+                "price_per_proxy": "$price",
+                "package_price_per_proxy": "$package_info.price_per_proxy"
+            }
+        },
+        {
+            "$project": {
+                "total_price": {"$round": [{"$multiply": ["$proxy_count", "$price_per_proxy"]}, 2]},
+                "margin": {"$round": [{"$multiply": ["$proxy_count", "$package_price_per_proxy"]}, 2]}
+            }
+        },
+        {
+            "$project": {
+                "profit": {
+                    "$round": [{"$subtract": ["$total_price", "$margin"]}, 2]
+                }
+            }
+        },
+        {
+            "$group": {
+                "_id": None,
+                "total_profit": {"$sum": "$profit"}
+            }
+        }
+    ]
+
+    profit_result = list(db.proxies.aggregate(profit_pipeline))
+
+    total_profit = profit_result[0]["total_profit"] if profit_result else 0
+
+    return total_profit
+
+
 @app.get("/statistic")
 async def statistic(request: Request):
     pipeline = [
@@ -170,6 +219,8 @@ async def statistic(request: Request):
     result = list(db.proxies.aggregate(pipeline))
     if result:
         statistics = result[0]
+        total_profit = get_total_profit()
+        statistics['total_profit'] = total_profit
     else:
         statistics = {"total_users": 0, "total_proxies": 0}
 

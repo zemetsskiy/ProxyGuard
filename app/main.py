@@ -78,17 +78,13 @@ async def add_proxy_package(request: Request,
 
 
 @app.get("/get_proxies")
-async def get_proxies(request: Request, filter: Optional[str] = None):
-    query = {}
-    if filter:
-        key, value = filter.split(':')
-        query[key] = value
-    proxies = list(db.proxies.find(query))
+async def get_proxies(request: Request):
+    proxies = list(db.proxies.find())
 
     for proxy in proxies:
         proxy_list = proxy.get('proxy_list', [])
         proxy_count = len(proxy_list)
-        total_price = proxy.get('price', 0) * proxy_count
+        total_price = round(proxy.get('price', 0) * proxy_count, 3)
         purchase_date = proxy.get('purchase_date')
         duration_months = proxy.get('duration_months', 0)
 
@@ -113,7 +109,7 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         proxy_list = order.get('proxy_list', [])
         proxy_count = len(proxy_list)
         price_per_proxy = order.get('price', 0)
-        total_price = price_per_proxy * proxy_count
+        total_price = round(price_per_proxy * proxy_count, 2)
         purchase_date = order.get('purchase_date')
         duration_months = order.get('duration_months', 0)
 

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="main-tools">
+    <div class="block-tools">
+        <h1>Tools</h1>
+        <p>Proxy parser</p>
+
+        <div class="input-group">
+        <textarea class="parse-textarea-class" name="proxy_for_parse" id="proxyParse"
+                  placeholder="Enter proxies here..."></textarea>
+            <button class="parse-button" id="parseButton">Parse</button>
+        </div>
+        <div class="input-group">
+        <textarea class="output-textarea-class" id="parsedProxy"
+                  placeholder="Parsed proxies will appear here..."></textarea>
+            <button class="save-in-buffer">Copy</button>
+        </div>
+    </div>
+
+</main>
+<script>
+
+
+    document.getElementById('parseButton').addEventListener('click', function() {
+        var rawProxies = document.getElementById('proxyParse').value;
+        var parsedProxies = parseProxies(rawProxies);
+        document.getElementById('parsedProxy').value = parsedProxies;
+    });
+
+    function parseProxies(rawData) {
+        var dataLines = rawData.split('\n').filter(line => line.trim());
+        var formattedProxies = [];
+        for (var i = 0; i < dataLines.length; i += 4) {
+            formattedProxies.push(dataLines.slice(i, i + 4).join(':'));
+        }
+        return formattedProxies.join('\n');
+    }
+
+    document.querySelector('.save-in-buffer').addEventListener('click', function() {
+        var parsedProxy = document.getElementById('parsedProxy');
+        parsedProxy.select();
+        document.execCommand('copy');
+    });
+</script>
+{% endblock content %}

@@ -22,6 +22,11 @@ async def home(request: Request):
     return templates.TemplateResponse("view_proxies.html", {"request": request})
 
 
+@app.get("/tools")
+async def tools(request: Request):
+    return templates.TemplateResponse("tools.html", {"request": request})
+
+
 @app.post("/add_proxy")
 async def add_proxy(request: Request,
                     customer_name: str = Form(...),
@@ -63,7 +68,6 @@ async def add_proxy(request: Request):
 async def add_proxy_package(request: Request,
                             package_name: str = Form(...),
                             price_per_proxy: float = Form(...)):
-
     proxy_package = {
         "package_name": package_name,
         "price_per_proxy": price_per_proxy
@@ -71,6 +75,7 @@ async def add_proxy_package(request: Request,
 
     db.packages.insert_one(proxy_package)
     return templates.TemplateResponse("view_proxies.html", {"request": request})
+
 
 # @app.get("/view_proxies")
 # async def view_proxies(request: Request):
@@ -127,7 +132,8 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         orders.append(order)
 
     if orders:
-        return templates.TemplateResponse("profile.html", {"request": request, "orders": orders, "customer_name": customer_name})
+        return templates.TemplateResponse("profile.html",
+                                          {"request": request, "orders": orders, "customer_name": customer_name})
 
     return JSONResponse(content={}, status_code=404)
 
@@ -137,6 +143,7 @@ async def delete_order_by_id(customer_name: str, order_id: str):
     from bson import ObjectId
     db.proxies.delete_one({"customer_name": customer_name, "_id": ObjectId(order_id)})
     return {"message": "Order deleted successfully"}
+
 
 @app.get("/statistic")
 async def statistic(request: Request):

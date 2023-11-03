@@ -2,8 +2,9 @@ import os
 
 from typing import Optional
 
-from bson import json_util
+from bson import json_util, ObjectId
 from loguru import logger
+from starlette.responses import RedirectResponse
 
 from database import db
 from fastapi import FastAPI, Request, Form
@@ -136,6 +137,7 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         duration_months = order.get('duration_months', 0)
         proxy_package = order.get('proxy_package')
 
+
         if purchase_date:
             expiration_date = purchase_date + timedelta(days=30 * duration_months)
             order['expiration_date'] = expiration_date.strftime('%Y-%m-%d')
@@ -144,6 +146,7 @@ async def get_profile_by_customer_name(request: Request, customer_name: str):
         order['proxy_count'] = proxy_count
         order['price_per_proxy'] = price_per_proxy
         order['total_price'] = total_price
+
 
         package_data = db.packages.find_one({"package_name": proxy_package})
 
@@ -166,6 +169,46 @@ async def delete_order_by_id(customer_name: str, order_id: str):
     db.proxies.delete_one({"customer_name": customer_name, "_id": ObjectId(order_id)})
     return {"message": "Order deleted successfully"}
 
+
+@app.get("/edit/{order_id}")
+async def edit_order_by_id(request: Request, order_id: str):
+    from bson import ObjectId
+    order = db.proxies.find_one({"_id": ObjectId(order_id)})
+    packages = db.packages.find({}, {"_id": 0, "package_name": 1})
+    logger.info(packages)
+    package_names = [package["package_name"] for package in packages]
+    if order:
+        return templates.TemplateResponse("edit.html", {"request": request, "order": order, "options": package_names})
+
+    return JSONResponse(content={}, status_code=404)
+
+
+@app.post("/edit/{order_id}")
+async def edit_order_by_id(request: Request,
+                           order_id: str,
+                           customer_name: str = Form(...),
+                           purchase_date: str = Form(...),
+                           duration_months: int = Form(...),
+                           price: float = Form(...),
+                           proxy_package: str = Form(...),
+                           proxy_list: str = Form(...)):
+
+    purchase_date = datetime.strptime(purchase_date, '%Y-%m-%d')
+
+    proxy_array = proxy_list.split('\n')
+
+    updated_proxy_document = {
+        "customer_name": customer_name,
+        "purchase_date": purchase_date,
+        "duration_months": duration_months,
+        "price": price,
+        "proxy_package": proxy_package,
+        "proxy_list": proxy_array
+    }
+
+    db.proxies.update_one({"_id": ObjectId(order_id)}, {"$set": updated_proxy_document})
+
+    return RedirectResponse(url=f"/profile/{customer_name}", status_code=303)
 
 def get_total_profit():
     profit_pipeline = [

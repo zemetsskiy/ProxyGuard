@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="main-add">
+    <h1>Edit Order</h1>
+    <div class="form-container">
+        <form action="http://127.0.0.1:8000/edit/{{ order._id}}" method="post">
+            <input class="form-input-class" type="text" name="customer_name" placeholder="Customer Name"
+                   value="{{ order.customer_name }}" required>
+            <input class="form-input-class" type="date" name="purchase_date"
+                   value="{{ order.purchase_date.strftime('%Y-%m-%d') }}" required>
+            <input class="form-input-class" type="number" name="duration_months" placeholder="Duration (Months)"
+                   value="{{ order.duration_months }}" required>
+
+            <input class="form-input-class" type="number" name="price" placeholder="Price for 1 proxy" step="0.01"
+                   value="{{ order.price }}" required>
+            <select class="form-input-class" name="proxy_package" required>
+                <option value="">Select a proxy package</option>
+                {% for package_name in options %}
+                <option value="{{ package_name }}" {% if order.proxy_package== package_name %}selected{% endif %}>{{
+                    package_name }}
+                </option>
+                {% endfor %}
+            </select>
+            <textarea class="form-textarea-class" name="proxy_list" id="proxyList" placeholder="Enter proxies here..."
+                      oninput="updateProxyCount()" required>{{ order.proxy_list|join('\n') }}</textarea>
+
+            <div id="proxyCount">Proxy Count: 0</div>
+            <button class="form-button" type="submit" onclick="window.location.href='/profile/{{ order.customer_name }}'" >Update</button>
+            <button class="form-button-back" type="button" onclick="window.location.href='/profile/{{ order.customer_name }}'">
+                Back
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function updateProxyCount() {
+            var proxyList = document.getElementById('proxyList').value.split('\n');
+            var proxyCount = proxyList.length;
+            if (proxyList[proxyList.length - 1] === '') {
+                proxyCount -= 1;
+            }
+            document.getElementById('proxyCount').textContent = 'Proxy Count: ' + proxyCount;
+        }
+    </script>
+</main>
+{% endblock content %}
